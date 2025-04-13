@@ -1,5 +1,5 @@
-name: hastor 
-version: 0.1.0.0
+name: hastor
+version: 0.0.1
 license: BSD3
 
 dependencies:
@@ -22,8 +22,31 @@ dependencies:
 executables:
   hastor-exe:
     main: Main.hs
-    source-dirs: app
+    source-dirs: src
     ghc-options:
       - -threaded
       - -rtsopts
       - -with-rtsopts=-N
+    dependencies:
+      - hastor
+
+tests:
+  hastor-test:
+    main: Spec.hs
+    source-dirs:
+      - test
+    dependencies:
+      - hastor # Package library name
+      - hspec # Testing framework
+      - hspec-expectations # For Hspec-style expectations
+    #- QuickCheck # For property-based testing (optional)
+    ghc-options:
+      - -threaded
+      - -rtsopts
+    rts-options:
+      - "-N"
+
+library:
+  source-dirs: src
+  exposed-modules:
+    - Bencoded 
