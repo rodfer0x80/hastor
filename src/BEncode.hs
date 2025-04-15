@@ -144,3 +144,4 @@ decodeBEncode :: ByteString -> (BEncode, ByteString)
 decodeBEncode bs = case decodeBEncode' bs of
     Just result -> result
     Nothing -> error $ "Invalid bencoded value: " ++ B.unpack bs
+
