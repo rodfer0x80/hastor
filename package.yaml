@@ -49,4 +49,4 @@ tests:
 library:
   source-dirs: src
   exposed-modules:
-    - Bencoded 
+    - BEncode 

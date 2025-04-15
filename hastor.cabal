@@ -12,7 +12,7 @@ build-type:     Simple
 
 library
   exposed-modules:
-      Bencoded
+      BEncode
   other-modules:
       Main
       Paths_hastor
@@ -38,7 +38,7 @@ library
 executable hastor-exe
   main-is: Main.hs
   other-modules:
-      Bencoded
+      BEncode
       Paths_hastor
   hs-source-dirs:
       src

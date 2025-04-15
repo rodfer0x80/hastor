@@ -2,6 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeApplications #-}
 
+
 import Control.Monad
 import Data.Aeson
 import Data.ByteString.Char8 (ByteString)
@@ -13,7 +14,8 @@ import System.Environment
 import System.Exit
 import System.IO (BufferMode (NoBuffering), hPutStrLn, hSetBuffering, stderr, stdout)
 
-import Bencoded (decodeBencodedValue, Bencoded) 
+
+import BEncode (decodeBEncode, BEncode) 
 
 
 main :: IO ()
@@ -31,7 +33,7 @@ main = do
     case command of
         "decode" -> do
             let encodedValue = args !! 1
-            case decodeBencodedValue (B.pack encodedValue) of  
+            case decodeBEncode (B.pack encodedValue) of  
                 (decodedValue, _) -> do 
                     let jsonValue = encode decodedValue 
                     LB.putStr jsonValue 

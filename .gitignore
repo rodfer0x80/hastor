@@ -1,3 +1,5 @@
+src/Main
+Main
 dist
 dist-*
 cabal-dev
