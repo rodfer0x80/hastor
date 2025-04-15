@@ -1,3 +1,0 @@
--- TODO
-[ ] next chapter
-    [ ] https://app.codecrafters.io/courses/bittorrent/stages/mn6
