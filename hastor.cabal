@@ -15,6 +15,7 @@ library
       BEncode
   other-modules:
       Main
+      Metainfo
       Paths_hastor
   hs-source-dirs:
       src
@@ -39,6 +40,7 @@ executable hastor-exe
   main-is: Main.hs
   other-modules:
       BEncode
+      Metainfo
       Paths_hastor
   hs-source-dirs:
       src
