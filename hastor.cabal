@@ -67,6 +67,7 @@ test-suite hastor-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      BEncodeSpec
       Paths_hastor
   hs-source-dirs:
       test

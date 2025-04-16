@@ -32,13 +32,12 @@ main = do
         "decode" -> do
             let encodedData = args !! 1
             case decodeBEncode (B.pack encodedData) of
-                (decodedData, _) -> do
-                    let jsonData = encode decodedData
-                    LB.putStr jsonData
+                decodedData  -> do
+                    LB.putStr $ encode decodedData 
                     putStrLn ""
         "parse" -> do
             let metainfoFile = args !! 1
             metainfoFileContent <- BS.readFile metainfoFile
             case decodeBEncode metainfoFileContent of
-                (decodedData, _) -> putStr (parseMetainfo decodedData)
+                decodedData -> putStr $ parseMetainfo decodedData
         _ -> putStrLn $ "Unknown command: " ++ command

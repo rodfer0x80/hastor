@@ -50,13 +50,8 @@ parseIntegerBS bs
         _ -> Nothing
 
 
-fromMaybeError :: String -> Maybe a -> a
-fromMaybeError name Nothing = error $ "Failed to decode " ++ name
-fromMaybeError _ (Just x) = x
-
-
-decodeString' :: ByteString -> Maybe (BEncode, ByteString)
-decodeString' bs = do
+decodeString :: ByteString -> Maybe (BEncode, ByteString)
+decodeString bs = do
     (len, rest1) <- parsePrefix parseIntegerBS bs
     (_colon, rest2) <- parsePrefix (parseChar ':') rest1
     let string = B.take (fromIntegral len) rest2
@@ -64,12 +59,8 @@ decodeString' bs = do
     guard (B.length string == fromIntegral len)
     return (BString string, remaining)
 
-decodeString :: ByteString -> (BEncode, ByteString)
-decodeString = fromMaybeError "decodeString" . decodeString'
-
-
-decodeInt' :: ByteString -> Maybe (BEncode, ByteString)
-decodeInt' bs = do
+decodeInt :: ByteString -> Maybe (BEncode, ByteString)
+decodeInt bs = do
     (_i, rest1) <- parsePrefix (parseChar 'i') bs
     (intPartBS, rest2) <- parseWhileNot 'e' rest1
     (_e, rest3) <- parsePrefix (parseChar 'e') rest2
@@ -84,12 +75,8 @@ decodeInt' bs = do
       Just (h, t) | h /= c -> fmap (\(res, rem) -> (B.cons h res, rem)) (parseWhileNot c t)
       _ -> Just (B.empty, s)
 
-decodeInt :: ByteString -> (BEncode, ByteString)
-decodeInt = fromMaybeError "decodeInt" . decodeInt'
-
-
-decodeList' :: ByteString -> Maybe (BEncode, ByteString)
-decodeList' bs = do
+decodeList :: ByteString -> Maybe (BEncode, ByteString)
+decodeList bs = do
     (_l, rest) <- parsePrefix (parseChar 'l') bs
     (items, remaining) <- foldWhileJust decodeBEncode' [] rest 
     (_e, finalRemaining) <- parsePrefix (parseChar 'e') remaining
@@ -100,21 +87,15 @@ decodeList' bs = do
       Just (val, rest) -> foldWhileJust f (val : acc) rest
       Nothing -> Just (acc, s)
 
-decodeList :: ByteString -> (BEncode, ByteString)
-decodeList bs = case decodeList' bs of
-    Just result -> result
-    Nothing -> error $ "Invalid list encoding: " ++ B.unpack bs
-
-
-decodeDictionary' :: ByteString -> Maybe (BEncode, ByteString)
-decodeDictionary' bs = do
+decodeDictionary :: ByteString -> Maybe (BEncode, ByteString)
+decodeDictionary bs = do
     (_d, rest) <- parsePrefix (parseChar 'd') bs
     (items, remaining) <- foldWhileJust decodePair [] rest 
     (_e, finalRemaining) <- parsePrefix (parseChar 'e') remaining
     return (BDict (reverse items), finalRemaining)
   where
     decodePair s = do
-        (keyDecoded, rest1) <- decodeString' s
+        (keyDecoded, rest1) <- decodeString s
         case keyDecoded of
             BString key -> do
                 (valueDecoded, rest2) <- decodeBEncode' rest1 
@@ -125,23 +106,18 @@ decodeDictionary' bs = do
       Just (val, rest) -> foldWhileJust f (val : acc) rest
       Nothing -> Just (acc, s)
 
-decodeDictionary :: ByteString -> (BEncode, ByteString)
-decodeDictionary bs = case decodeDictionary' bs of
-    Just result -> result
-    Nothing -> error $ "Invalid dictionary encoding: " ++ B.unpack bs
-
-
 decodeBEncode' :: ByteString -> Maybe (BEncode, ByteString)
 decodeBEncode' bs
     | B.null bs = Nothing
-    | isDigit (B.head bs) = decodeString' bs
-    | B.head bs == 'i' = decodeInt' bs
-    | B.head bs == 'l' = decodeList' bs
-    | B.head bs == 'd' = decodeDictionary' bs
+    | isDigit (B.head bs) = decodeString bs
+    | B.head bs == 'i' = decodeInt bs
+    | B.head bs == 'l' = decodeList bs
+    | B.head bs == 'd' = decodeDictionary bs
     | otherwise = Nothing
 
-decodeBEncode :: ByteString -> (BEncode, ByteString)
+
+decodeBEncode :: ByteString -> BEncode
 decodeBEncode bs = case decodeBEncode' bs of
-    Just result -> result
-    Nothing -> error $ "Invalid bencoded value: " ++ B.unpack bs
+    Just (decodedData, _) -> decodedData
+    Nothing -> error $ "Error: Invalid BEncoded bytestring: " ++ B.unpack bs
 
