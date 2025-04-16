@@ -13,9 +13,9 @@ build-type:     Simple
 library
   exposed-modules:
       BEncode
+      Metainfo
   other-modules:
       Main
-      Metainfo
       Paths_hastor
   hs-source-dirs:
       src

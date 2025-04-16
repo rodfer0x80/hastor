@@ -50,3 +50,4 @@ library:
   source-dirs: src
   exposed-modules:
     - BEncode 
+    - Metainfo 
