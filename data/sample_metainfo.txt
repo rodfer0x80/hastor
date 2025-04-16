@@ -1,3 +1,0 @@
-Tracker URL: http://bittorrent-test-tracker.codecrafters.io/announce
-Length: 92063
-
