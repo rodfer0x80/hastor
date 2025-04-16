@@ -115,7 +115,7 @@ decodeBEncode' bs
     | B.head bs == 'd' = decodeDictionary bs
     | otherwise = Nothing
 
-
+-- TODO: should error/handling be done in Main and Spec according to needs instead of generally?
 decodeBEncode :: ByteString -> BEncode
 decodeBEncode bs = case decodeBEncode' bs of
     Just (decodedData, _) -> decodedData
