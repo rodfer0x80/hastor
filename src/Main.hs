@@ -14,7 +14,7 @@ import System.Exit
 import System.IO (BufferMode (NoBuffering), hPutStrLn, hSetBuffering, stderr, stdout)
 
 import BEncode (decodeBEncode, BEncode (BDict))
-import Metainfo (parseMetainfo)
+import Meta (parseMeta)
 
 
 main :: IO ()
@@ -36,8 +36,8 @@ main = do
                     LB.putStr $ encode decodedData 
                     putStrLn ""
         "parse" -> do
-            let metainfoFile = args !! 1
-            metainfoFileContent <- BS.readFile metainfoFile
-            case decodeBEncode metainfoFileContent of
-                decodedData -> putStr $ parseMetainfo decodedData
+            let metaFile = args !! 1
+            metaFileContent <- BS.readFile metaFile
+            case decodeBEncode metaFileContent of
+                decodedData -> putStr $ parseMeta decodedData
         _ -> putStrLn $ "Unknown command: " ++ command

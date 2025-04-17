@@ -13,6 +13,12 @@ dependencies:
   - time # may help with the expiry function
   - async # may help with concurrency
   - mtl # may help with structuring
+  - binary # bytes for hashing
+  - cryptonite # hashing 
+  - SHA
+  - base64
+  - cryptohash-sha1 # SHA1
+  - base16-bytestring
   # Parsing libs
   - megaparsec
   - parser-combinators
@@ -50,4 +56,4 @@ library:
   source-dirs: src
   exposed-modules:
     - BEncode 
-    - Metainfo 
+    - Meta 

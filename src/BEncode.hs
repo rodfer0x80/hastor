@@ -1,9 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeApplications #-}
 
-
 module BEncode where
-
 
 import Control.Applicative
 import Control.Monad
@@ -14,9 +12,9 @@ import qualified Data.ByteString.Char8 as B
 import qualified Data.ByteString.Lazy as LB
 import Data.Char (isDigit)
 import Data.Foldable (foldl')
+import Data.List (sortBy)
 import Data.Text.Encoding (decodeUtf8)
 import Debug.Trace (trace)
-
 
 data BEncode
     = BInt Integer
@@ -119,5 +117,13 @@ decodeBEncode' bs
 decodeBEncode :: ByteString -> BEncode
 decodeBEncode bs = case decodeBEncode' bs of
     Just (decodedData, _) -> decodedData
-    Nothing -> error $ "Error: Invalid BEncoded bytestring: " ++ B.unpack bs
+    Nothing -> error $ "Error: Decoding bytestring: " ++ B.unpack bs
 
+encodeBEncode :: BEncode -> ByteString
+encodeBEncode (BString bs) = B.concat [B.pack (show (B.length bs)), ":", bs]
+encodeBEncode (BInt i) = B.concat ["i", B.pack (show i), "e"]
+encodeBEncode (BList xs) = B.concat ["l", B.concat (map encodeBEncode xs), "e"]
+encodeBEncode (BDict dict) = 
+    let sortedDict = sortBy (\(k1, _) (k2, _) -> compare k1 k2) dict
+        encodePair (k, v) = B.concat [encodeBEncode (BString k), encodeBEncode v]
+    in B.concat ["d", B.concat (map encodePair sortedDict), "e"]
