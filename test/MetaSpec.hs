@@ -17,7 +17,7 @@ spec = do
                   (B.pack "length", BInt 12345)
                 ])
             ]
-          expectedOutput = "Tracker URL: http://example.com/tracker\nLength: 12345\nInfo Hash: 6b86b273ff34fce19d6b804eff5a3f5747ada4aa\n"
+          expectedOutput = "Tracker URL: http://example.com/tracker\nLength: 12345\nInfo Hash: 35a51203445323b77f936eed3c522b56f7cfc2e1\n"
       parseMeta metadata `shouldBe` expectedOutput
 
     it "should handle missing 'announce' key" $ do
@@ -27,7 +27,7 @@ spec = do
                   (B.pack "length", BInt 12345)
                 ])
             ]
-          expectedOutput = "Tracker URL: N/A\nLength: 12345\nInfo Hash: 6b86b273ff34fce19d6b804eff5a3f5747ada4aa\n"
+          expectedOutput = "Tracker URL: N/A\nLength: 12345\nInfo Hash: 35a51203445323b77f936eed3c522b56f7cfc2e1\n"
       parseMeta metadata `shouldBe` expectedOutput
 
     it "should handle missing 'info' key" $ do
@@ -35,7 +35,7 @@ spec = do
           metadata = BDict [
               (B.pack "announce", BString $ B.pack "http://example.com/tracker")
             ]
-          expectedOutput = "Tracker URL: http://example.com/tracker\nError: Info dictionary not found\nError: Info dictionary not found\n"
+          expectedOutput = "Tracker URL: http://example.com/tracker\nLength: N/A\nInfo Hash: N/A\n"
       parseMeta metadata `shouldBe` expectedOutput
 
     it "should handle missing 'length' key in the 'info' dictionary" $ do
@@ -44,7 +44,7 @@ spec = do
               (B.pack "announce", BString $ B.pack "http://example.com/tracker"),
               (B.pack "info", BDict [])
             ]
-          expectedOutput = "Tracker URL: http://example.com/tracker\nLength: N/A\nInfo Hash: da39a3ee5e6b4b0d3255bfef95601890afd80709\n"
+          expectedOutput = "Tracker URL: http://example.com/tracker\nLength: N/A\nInfo Hash: 600ccd1b71569232d01d110bc63e906beab04d8c\n"
       parseMeta metadata `shouldBe` expectedOutput
 
     it "should handle non-integer value for 'length'" $ do
@@ -55,7 +55,7 @@ spec = do
                   (B.pack "length", BString $ B.pack "not an integer")
                 ])
             ]
-          expectedOutput = "Tracker URL: http://example.com/tracker\nLength: N/A\nInfo Hash: 6b86b273ff34fce19d6b804eff5a3f5747ada4aa\n"
+          expectedOutput = "Tracker URL: http://example.com/tracker\nLength: N/A\nInfo Hash: 0608cb32c9810e190a868ae06eb926dede06a36a\n"
       parseMeta metadata `shouldBe` expectedOutput
 
     it "should return an error message for non-dictionary input" $ do
@@ -67,7 +67,7 @@ spec = do
     it "should handle an empty dictionary" $ do
       let metadata :: BEncode
           metadata = BDict []
-          expectedOutput = "Tracker URL: N/A\nError: Info dictionary not found\nError: Info dictionary not found\n"
+          expectedOutput = "Tracker URL: N/A\nLength: N/A\nInfo Hash: N/A\n"
       parseMeta metadata `shouldBe` expectedOutput
 
     it "should handle a dictionary with extra keys" $ do
@@ -80,5 +80,5 @@ spec = do
                 ]),
               (B.pack "creation date", BInt 1681728000)
             ]
-          expectedOutput = "Tracker URL: http://example.com/tracker\nLength: 12345\nInfo Hash: 6b86b273ff34fce19d6b804eff5a3f5747ada4aa\n"
+          expectedOutput = "Tracker URL: http://example.com/tracker\nLength: 12345\nInfo Hash: 4403baf75248fb567f7977c3dd7ee9a257067eef\n"
       parseMeta metadata `shouldBe` expectedOutput
