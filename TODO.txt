@@ -1,1 +1,8 @@
-[ ] add test to encodeBEncode
+=> Tests
+    [x] add test to encodeBEncode
+    [ ] fix multibyte test 
+        [ ] encodeBEncode 
+        [ ] decodeBEncode
+
+=> Dev
+    [ ] next chapter 
