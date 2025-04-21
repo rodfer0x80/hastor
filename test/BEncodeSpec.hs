@@ -1,19 +1,15 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeApplications #-}
 
-
 module BEncodeSpec where
 
-
-import Test.Hspec
-import Test.Hspec.Expectations
-import qualified Data.ByteString.Char8 as B
+import BEncode (BEncode (..), decodeBEncode, encodeBEncode)
 import Control.Exception (evaluate)
 import Data.Aeson
+import qualified Data.ByteString.Char8 as B
 import Data.Map (fromList)
-
-import BEncode (BEncode (..), decodeBEncode, encodeBEncode)
-
+import Test.Hspec
+import Test.Hspec.Expectations
 
 spec :: Spec
 spec = do
@@ -58,8 +54,8 @@ spec = do
       it "should error on missing colon" $
         evaluate (decodeBEncode "5hello") `shouldThrow` anyException
       -- TODO: fix this
-      --it "should decode a string with multibyte UTF-8 characters" $
-        --decodeBEncode "6:你好世界" `shouldBe` BString "你好世界"
+      -- it "should decode a string with multibyte UTF-8 characters" $
+      -- decodeBEncode "6:你好世界" `shouldBe` BString "你好世界"
       it "should decode a long string" $
         decodeBEncode (B.pack $ show (1000 :: Int) ++ ":" ++ replicate 1000 'a') `shouldBe` BString (B.pack $ replicate 1000 'a')
       it "should error if the length prefix is larger than the remaining bytestring" $
@@ -153,7 +149,6 @@ spec = do
       it "should error on truncated dictionary value" $
         evaluate (decodeBEncode "d3:fooi1") `shouldThrow` anyException
 
-
   describe "encodeBEncode" $ do
     describe "Integers" $ do
       it "should encode a positive integer" $
@@ -176,9 +171,9 @@ spec = do
         encodeBEncode (BString "hello:!@#$") `shouldBe` "10:hello:!@#$"
       it "should encode a long string" $
         encodeBEncode (BString (B.pack $ replicate 1000 'a')) `shouldBe` B.pack (show (1000 :: Int) ++ ":" ++ replicate 1000 'a')
-      -- TODO: fix this 
-      --it "should encode a string with multibyte UTF-8 characters" $
-         --encodeBEncode (BString "你好世界") `shouldBe` "12:你好世界" -- Assuming UTF-8 encoding where each Chinese character is 3 bytes
+    -- TODO: fix this
+    -- it "should encode a string with multibyte UTF-8 characters" $
+    -- encodeBEncode (BString "你好世界") `shouldBe` "12:你好世界" -- Assuming UTF-8 encoding where each Chinese character is 3 bytes
 
     describe "Lists" $ do
       it "should encode an empty list" $
@@ -198,7 +193,6 @@ spec = do
       it "should encode a list with an empty dictionary" $
         encodeBEncode (BList [BDict []]) `shouldBe` "ldee"
 
-
     describe "Dictionaries" $ do
       it "should encode an empty dictionary" $
         encodeBEncode (BDict []) `shouldBe` "de"
@@ -217,7 +211,7 @@ spec = do
       it "should encode a dictionary with an empty string value" $
         encodeBEncode (BDict [("foo", BString "")]) `shouldBe` "d3:foo0:e"
       it "should encode a dictionary with an empty list value" $
-       encodeBEncode (BDict [("foo", BList [])]) `shouldBe` "d3:foolee"
+        encodeBEncode (BDict [("foo", BList [])]) `shouldBe` "d3:foolee"
       it "should encode a dictionary with an empty dictionary value" $
         encodeBEncode (BDict [("foo", BDict [])]) `shouldBe` "d3:foodee"
       it "should encode a dictionary with multiple key-value pairs, sorted" $
