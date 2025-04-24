@@ -4,11 +4,11 @@ module Meta (parseMeta) where
 
 import BEncode (BEncode (..), encodeBEncode)
 import qualified Crypto.Hash.SHA1 as SHA1
+import Data.Bits (testBit)
 import Data.ByteString (ByteString)
 import qualified Data.ByteString.Base16 as Hex
 import qualified Data.ByteString.Char8 as B
 import Data.Maybe (fromMaybe)
-import Data.Bits (testBit)
 
 extractInteger :: BEncode -> Maybe Integer
 extractInteger (BInt i) = Just i
@@ -33,9 +33,9 @@ processPieceHashes :: ByteString -> String
 processPieceHashes hashesBytes
   | B.null hashesBytes = ""
   | otherwise =
-    let (currentHash, remainingHashes) = B.splitAt 20 hashesBytes
-        hexHash = Hex.encode currentHash
-    in B.unpack hexHash ++ "\n" ++ processPieceHashes remainingHashes
+      let (currentHash, remainingHashes) = B.splitAt 20 hashesBytes
+          hexHash = Hex.encode currentHash
+       in "\n" ++ B.unpack hexHash ++ processPieceHashes remainingHashes
 
 parseMeta :: BEncode -> String
 parseMeta (BDict metadata) =
@@ -68,9 +68,12 @@ parseMeta (BDict metadata) =
 
       pieceHashesStr = case infoDictMaybe of
         Just infoDict -> case lookupBEncode "pieces" infoDict >>= extractString of
-          Just hashesBytes -> "Piece Hashes:\n" ++ processPieceHashes hashesBytes -- unlines (map (B.unpack . encode) (chunksOf 20 hashesBytes))
-          Nothing -> "Pieces: N/A"
-        Nothing -> "Pieces: N/A"
+          Just hashesBytes ->
+            if B.null hashesBytes
+              then "Piece Hashes: N/A"
+              else "Piece Hashes: " ++ processPieceHashes hashesBytes -- unlines (map (B.unpack . encode) (chunksOf 20 hashesBytes))
+          Nothing -> "Piece Hashes: N/A"
+        Nothing -> "Piece Hashes: N/A"
    in "\n"
         ++ trackerStr
         ++ "\n"

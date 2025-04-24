@@ -3,8 +3,14 @@
     [ ] fix multibyte test 
         [ ] encodeBEncode 
         [ ] decodeBEncode
-    [ ] fix meta tests with new feature
-    [ ] add tests for piece hashes
+    [x] fix meta tests with new feature
+    [x] add tests for piece hashes
 
 => Dev
-    [ ] next chapter 
+  [ ] torrents
+    [ ] discover peers 
+    [ ] peer handshake
+    [ ] download a piece 
+    [ ] download a whole file
+  [ ] magnets
+    [ ] ...
