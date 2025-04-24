@@ -119,10 +119,10 @@ decodeBEncode bs = case decodeBEncode' bs of
   Nothing -> error $ "Error: Decoding bytestring: " ++ B.unpack bs
 
 encodeBEncode :: BEncode -> ByteString
-encodeBEncode (BString bs) = B.concat [B.pack (show (B.length bs)), ":", bs]
-encodeBEncode (BInt i) = B.concat ["i", B.pack (show i), "e"]
-encodeBEncode (BList xs) = B.concat ["l", B.concat (map encodeBEncode xs), "e"]
+encodeBEncode (BString bs) = B.concat [B.pack (show (B.length bs)), ':', bs]
+encodeBEncode (BInt i) = B.concat ['i', B.pack (show i), 'e']
+encodeBEncode (BList xs) = B.concat ['l', B.concat (map encodeBEncode xs), 'e']
 encodeBEncode (BDict dict) =
   let sortedDict = sortBy (\(k1, _) (k2, _) -> compare k1 k2) dict
       encodePair (k, v) = B.concat [encodeBEncode (BString k), encodeBEncode v]
-   in B.concat ["d", B.concat (map encodePair sortedDict), "e"]
+   in B.concat ['d', B.concat (map encodePair sortedDict), 'e']
