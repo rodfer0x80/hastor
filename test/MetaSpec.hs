@@ -22,7 +22,7 @@ spec = do
                     ]
                 )
               ]
-          expectedOutput = "\nTracker URL: http://example.com/tracker\nLength: 12345\nInfo Hash: 16e4e76803e108ff79a979b63aa7fa65e5151b25\nPieces Length: 8192\nPiece Hashes: \n736f6d657069656365686173686573\n"
+          expectedOutput = "Tracker URL: http://example.com/tracker\nLength: 12345\nInfo Hash: 16e4e76803e108ff79a979b63aa7fa65e5151b25\nPieces Length: 8192\nPiece Hashes: \n736f6d657069656365686173686573\n"
       parseMeta metadata `shouldBe` expectedOutput
 
     it "should handle missing 'announce' key" $ do
@@ -37,7 +37,7 @@ spec = do
                     ]
                 )
               ]
-          expectedOutput = "\nTracker URL: N/A\nLength: 12345\nInfo Hash: 16e4e76803e108ff79a979b63aa7fa65e5151b25\nPieces Length: 8192\nPiece Hashes: \n736f6d657069656365686173686573\n"
+          expectedOutput = "Tracker URL: N/A\nLength: 12345\nInfo Hash: 16e4e76803e108ff79a979b63aa7fa65e5151b25\nPieces Length: 8192\nPiece Hashes: \n736f6d657069656365686173686573\n"
       parseMeta metadata `shouldBe` expectedOutput
 
     it "should handle missing 'info' key" $ do
@@ -46,7 +46,7 @@ spec = do
             BDict
               [ (B.pack "announce", BString $ B.pack "http://example.com/tracker")
               ]
-          expectedOutput = "\nTracker URL: http://example.com/tracker\nLength: N/A\nInfo Hash: N/A\nPieces Length: N/A\nPiece Hashes: N/A\n"
+          expectedOutput = "Tracker URL: http://example.com/tracker\nLength: N/A\nInfo Hash: N/A\nPieces Length: N/A\nPiece Hashes: N/A\n"
       parseMeta metadata `shouldBe` expectedOutput
 
     it "should handle missing 'length', 'piece length', and 'pieces' keys in the 'info' dictionary" $ do
@@ -57,7 +57,7 @@ spec = do
               [ (B.pack "announce", BString $ B.pack "http://example.com/tracker"),
                 (B.pack "info", infoDict)
               ]
-          expectedOutput = "\nTracker URL: http://example.com/tracker\nLength: N/A\nInfo Hash: 600ccd1b71569232d01d110bc63e906beab04d8c\nPieces Length: N/A\nPiece Hashes: N/A\n"
+          expectedOutput = "Tracker URL: http://example.com/tracker\nLength: N/A\nInfo Hash: 600ccd1b71569232d01d110bc63e906beab04d8c\nPieces Length: N/A\nPiece Hashes: N/A\n"
       parseMeta metadata `shouldBe` expectedOutput
 
     it "should handle non-integer value for 'length'" $ do
@@ -72,7 +72,7 @@ spec = do
               [ (B.pack "announce", BString $ B.pack "http://example.com/tracker"),
                 (B.pack "info", infoDict)
               ]
-          expectedOutput = "\nTracker URL: http://example.com/tracker\nLength: N/A\nInfo Hash: 6a5f9f577d8d30241b973b99fad310baca558112\nPieces Length: 8192\nPiece Hashes: \n736f6d657069656365686173686573\n"
+          expectedOutput = "Tracker URL: http://example.com/tracker\nLength: N/A\nInfo Hash: 6a5f9f577d8d30241b973b99fad310baca558112\nPieces Length: 8192\nPiece Hashes: \n736f6d657069656365686173686573\n"
       parseMeta metadata `shouldBe` expectedOutput
 
     it "should handle non-integer value for 'piece length'" $ do
@@ -87,7 +87,7 @@ spec = do
               [ (B.pack "announce", BString $ B.pack "http://example.com/tracker"),
                 (B.pack "info", infoDict)
               ]
-          expectedOutput = "\nTracker URL: http://example.com/tracker\nLength: 12345\nInfo Hash: 321fec476ff95e3fd831e0585581f603d937d608\nPieces Length: N/A\nPiece Hashes: \n736f6d657069656365686173686573\n"
+          expectedOutput = "Tracker URL: http://example.com/tracker\nLength: 12345\nInfo Hash: 321fec476ff95e3fd831e0585581f603d937d608\nPieces Length: N/A\nPiece Hashes: \n736f6d657069656365686173686573\n"
       parseMeta metadata `shouldBe` expectedOutput
 
     it "should handle non-string value for 'pieces'" $ do
@@ -102,7 +102,7 @@ spec = do
               [ (B.pack "announce", BString $ B.pack "http://example.com/tracker"),
                 (B.pack "info", infoDict)
               ]
-          expectedOutput = "\nTracker URL: http://example.com/tracker\nLength: 12345\nInfo Hash: 60b79a98205e2c85912401ed0db53b2c469a0e23\nPieces Length: 8192\nPiece Hashes: N/A\n"
+          expectedOutput = "Tracker URL: http://example.com/tracker\nLength: 12345\nInfo Hash: 60b79a98205e2c85912401ed0db53b2c469a0e23\nPieces Length: 8192\nPiece Hashes: N/A\n"
       parseMeta metadata `shouldBe` expectedOutput
 
     it "should return an error message for non-dictionary input" $ do
@@ -114,7 +114,7 @@ spec = do
     it "should handle an empty dictionary" $ do
       let metadata :: BEncode
           metadata = BDict []
-          expectedOutput = "\nTracker URL: N/A\nLength: N/A\nInfo Hash: N/A\nPieces Length: N/A\nPiece Hashes: N/A\n"
+          expectedOutput = "Tracker URL: N/A\nLength: N/A\nInfo Hash: N/A\nPieces Length: N/A\nPiece Hashes: N/A\n"
       parseMeta metadata `shouldBe` expectedOutput
 
     it "should handle a dictionary with extra keys" $ do
@@ -131,7 +131,7 @@ spec = do
                 (B.pack "info", infoDict),
                 (B.pack "creation date", BInt 1681728000)
               ]
-          expectedOutput = "\nTracker URL: http://example.com/tracker\nLength: 12345\nInfo Hash: e234a3c12c386539870b88f692393d6d77db42e8\nPieces Length: 8192\nPiece Hashes: \n736f6d657069656365686173686573\n"
+          expectedOutput = "Tracker URL: http://example.com/tracker\nLength: 12345\nInfo Hash: e234a3c12c386539870b88f692393d6d77db42e8\nPieces Length: 8192\nPiece Hashes: \n736f6d657069656365686173686573\n"
       parseMeta metadata `shouldBe` expectedOutput
 
     it "should handle a metadata dictionary without 'piece length' and 'pieces'" $ do
@@ -144,7 +144,7 @@ spec = do
               [ (B.pack "announce", BString $ B.pack "http://othertracker.com/announce"),
                 (B.pack "info", infoDict)
               ]
-          expectedOutput = "\nTracker URL: http://othertracker.com/announce\nLength: 54321\nInfo Hash: 8deb07211c507a70ea115ff08dee8e09e39627f4\nPieces Length: N/A\nPiece Hashes: N/A\n"
+          expectedOutput = "Tracker URL: http://othertracker.com/announce\nLength: 54321\nInfo Hash: 8deb07211c507a70ea115ff08dee8e09e39627f4\nPieces Length: N/A\nPiece Hashes: N/A\n"
       parseMeta metadata `shouldBe` expectedOutput
 
     it "should handle a metadata dictionary with an empty 'pieces' string" $ do
@@ -159,7 +159,7 @@ spec = do
               [ (B.pack "announce", BString $ B.pack "udp://tracker.local:8080/announce"),
                 (B.pack "info", infoDict)
               ]
-          expectedOutput = "\nTracker URL: udp://tracker.local:8080/announce\nLength: 9876\nInfo Hash: b1217567d2c28954b12994b1129e801987f01df0\nPieces Length: 4096\nPiece Hashes: N/A\n"
+          expectedOutput = "Tracker URL: udp://tracker.local:8080/announce\nLength: 9876\nInfo Hash: b1217567d2c28954b12994b1129e801987f01df0\nPieces Length: 4096\nPiece Hashes: N/A\n"
       parseMeta metadata `shouldBe` expectedOutput
 
     it "should handle a metadata dictionary with multiple files (no 'length' at the top level of 'info')" $ do
@@ -177,7 +177,7 @@ spec = do
               [ (B.pack "announce", BString $ B.pack "http://multitracker.com/announce"),
                 (B.pack "info", infoDict)
               ]
-          expectedOutput = "\nTracker URL: http://multitracker.com/announce\nLength: N/A\nInfo Hash: c8d9e509c92de76254947ad35e09e61aa42b294f\nPieces Length: 8192\nPiece Hashes: \n616e6f7468657268617368\n"
+          expectedOutput = "Tracker URL: http://multitracker.com/announce\nLength: N/A\nInfo Hash: c8d9e509c92de76254947ad35e09e61aa42b294f\nPieces Length: 8192\nPiece Hashes: \n616e6f7468657268617368\n"
       parseMeta metadata `shouldBe` expectedOutput
 
     it "should handle a metadata dictionary with a missing 'files' key in multi-file mode" $ do
@@ -191,7 +191,7 @@ spec = do
               [ (B.pack "announce", BString $ B.pack "http://yetanothertracker.com/announce"),
                 (B.pack "info", infoDict)
               ]
-          expectedOutput = "\nTracker URL: http://yetanothertracker.com/announce\nLength: N/A\nInfo Hash: a20ce83f366051002506b32f8b1aab5c80818a03\nPieces Length: 4096\nPiece Hashes: \n736f6d656f7468657268617368\n"
+          expectedOutput = "Tracker URL: http://yetanothertracker.com/announce\nLength: N/A\nInfo Hash: a20ce83f366051002506b32f8b1aab5c80818a03\nPieces Length: 4096\nPiece Hashes: \n736f6d656f7468657268617368\n"
       parseMeta metadata `shouldBe` expectedOutput
 
     it "should handle a metadata dictionary with an empty 'files' list" $ do
@@ -206,5 +206,5 @@ spec = do
               [ (B.pack "announce", BString $ B.pack "http://finaltracker.net/announce"),
                 (B.pack "info", infoDict)
               ]
-          expectedOutput = "\nTracker URL: http://finaltracker.net/announce\nLength: N/A\nInfo Hash: cce936ca9dc8956549198e8f0e4be4b5f7cc8d87\nPieces Length: 8192\nPiece Hashes: \n6c617374706965636568617368\n"
+          expectedOutput = "Tracker URL: http://finaltracker.net/announce\nLength: N/A\nInfo Hash: cce936ca9dc8956549198e8f0e4be4b5f7cc8d87\nPieces Length: 8192\nPiece Hashes: \n6c617374706965636568617368\n"
       parseMeta metadata `shouldBe` expectedOutput

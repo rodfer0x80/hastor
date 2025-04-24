@@ -74,8 +74,7 @@ parseMeta (BDict metadata) =
               else "Piece Hashes: " ++ processPieceHashes hashesBytes -- unlines (map (B.unpack . encode) (chunksOf 20 hashesBytes))
           Nothing -> "Piece Hashes: N/A"
         Nothing -> "Piece Hashes: N/A"
-   in "\n"
-        ++ trackerStr
+   in trackerStr
         ++ "\n"
         ++ lengthStr
         ++ "\n"
