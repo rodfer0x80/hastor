@@ -3,6 +3,8 @@
     [ ] fix multibyte test 
         [ ] encodeBEncode 
         [ ] decodeBEncode
+    [ ] fix meta tests with new feature
+    [ ] add tests for piece hashes
 
 => Dev
     [ ] next chapter 

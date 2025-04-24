@@ -39,6 +39,7 @@ library
     , parsec
     , parser-combinators
     , text
+    , split
     , time
   default-language: Haskell2010
 
