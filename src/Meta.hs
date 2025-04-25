@@ -9,7 +9,7 @@ import Data.ByteString (ByteString)
 import qualified Data.ByteString.Base16 as Hex
 import qualified Data.ByteString.Char8 as B
 import Data.Maybe (fromMaybe)
-import Network.URI.Encode as B64
+import Network.URI.Encode as URL
 
 extractInteger :: BEncode -> Maybe Integer
 extractInteger (BInt i) = Just i
@@ -62,18 +62,62 @@ parseInfoHash :: BEncode -> String
 parseInfoHash (BDict metadata) = B.unpack $ Hex.encode $ hashBDict (BDict metadata)
 
 parseinfoHashUrlEncoded :: BEncode -> String
-parseinfoHashUrlEncoded (BDict metadata) = B.unpack $ B64.encodeByteString $ hashBDict (BDict metadata)
+parseinfoHashUrlEncoded (BDict metadata) = B.unpack $ URL.encodeByteString $ hashBDict (BDict metadata)
 
 getPeers :: BEncode -> String
 getPeers (BDict metadata) =
   let trackerUrl = fromMaybe "" (parseTrackerUrl (BDict metadata))
       urlEncodedHash = parseinfoHashUrlEncoded (BDict metadata)
-      lengthStr = case parseInfoDict (BDict metadata) of
+      peerId = "13374204204204201337"
+      port = "6881"
+      uploaded = "0"
+      downloaded = "0"
+      left = case parseInfoDict (BDict metadata) of
         Just infoDict -> case lookupBEncode "length" infoDict >>= extractInteger of
           Just lenInt -> show lenInt
           Nothing -> "0"
         Nothing -> "0"
-   in "tracker_url: " ++ trackerUrl ++ "\n" ++ "info_hash: " ++ urlEncodedHash ++ "\n" ++ "peer_id: " ++ "13374204204204201337" ++ "\n" ++ "ports: " ++ "6881" ++ "\n" ++ "uploaded: " ++ "0" ++ "\n" ++ "downloaded: " ++ "0" ++ "\n" ++ "left: " ++ lengthStr ++ "\n" ++ "compact: " ++ "1" ++ "\n"
+      compact = "1"
+   in "tracker_url: "
+        ++ trackerUrl
+        ++ "\n"
+        ++ "info_hash: "
+        ++ urlEncodedHash
+        ++ "\n"
+        ++ "peer_id: "
+        ++ peerId
+        ++ "\n"
+        ++ "port: "
+        ++ port
+        ++ "\n"
+        ++ "uploaded: "
+        ++ uploaded
+        ++ "\n"
+        ++ "downloaded: "
+        ++ downloaded
+        ++ "\n"
+        ++ "left: "
+        ++ left
+        ++ "\n"
+        ++ "compact: "
+        ++ compact
+        ++ "\n"
+
+requestPeers :: BEncode -> String
+requestPeers (BDict metadata) =
+  let trackerUrl = fromMaybe "" (parseTrackerUrl (BDict metadata))
+      urlEncodedHash = parseinfoHashUrlEncoded (BDict metadata)
+      peerId = "13374204204204201337"
+      port = "6881"
+      uploaded = "0"
+      downloaded = "0"
+      left = case parseInfoDict (BDict metadata) of
+        Just infoDict -> case lookupBEncode "length" infoDict >>= extractInteger of
+          Just lenInt -> show lenInt
+          Nothing -> "0"
+        Nothing -> "0"
+      compact = "1"
+   in "requestPeers"
 
 parseMeta :: BEncode -> String
 parseMeta (BDict metadata) =
