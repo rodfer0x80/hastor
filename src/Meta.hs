@@ -42,11 +42,6 @@ processPieceHashes hashesBytes
           hexHash = Hex.encode currentHash
        in "\n" ++ B.unpack hexHash ++ processPieceHashes remainingHashes
 
-getPeers :: BEncode -> String
-getPeers (BDict metadata) = 
-  let urlEncodedHash = parseinfoHashUrlEncoded (BDict metadata)
-    in urlEncodedHash 
-
 parseTrackerUrl :: BEncode -> Maybe String
 parseTrackerUrl (BDict metadata) =
   let trackerUrlMaybe :: Maybe BEncode
@@ -68,6 +63,17 @@ parseInfoHash (BDict metadata) = B.unpack $ Hex.encode $ hashBDict (BDict metada
 
 parseinfoHashUrlEncoded :: BEncode -> String
 parseinfoHashUrlEncoded (BDict metadata) = B.unpack $ B64.encodeByteString $ hashBDict (BDict metadata)
+
+getPeers :: BEncode -> String
+getPeers (BDict metadata) =
+  let trackerUrl = fromMaybe "" (parseTrackerUrl (BDict metadata))
+      urlEncodedHash = parseinfoHashUrlEncoded (BDict metadata)
+      lengthStr = case parseInfoDict (BDict metadata) of
+        Just infoDict -> case lookupBEncode "length" infoDict >>= extractInteger of
+          Just lenInt -> show lenInt
+          Nothing -> "0"
+        Nothing -> "0"
+   in "tracker_url: " ++ trackerUrl ++ "\n" ++ "info_hash: " ++ urlEncodedHash ++ "\n" ++ "peer_id: " ++ "13374204204204201337" ++ "\n" ++ "ports: " ++ "6881" ++ "\n" ++ "uploaded: " ++ "0" ++ "\n" ++ "downloaded: " ++ "0" ++ "\n" ++ "left: " ++ lengthStr ++ "\n" ++ "compact: " ++ "1" ++ "\n"
 
 parseMeta :: BEncode -> String
 parseMeta (BDict metadata) =
@@ -94,10 +100,9 @@ parseMeta (BDict metadata) =
           Just hashesBytes ->
             if B.null hashesBytes
               then "Piece Hashes: N/A"
-              else "Piece Hashes: " ++ processPieceHashes hashesBytes 
+              else "Piece Hashes: " ++ processPieceHashes hashesBytes
           Nothing -> "Piece Hashes: N/A"
         Nothing -> "Piece Hashes: N/A"
-   
    in trackerStr
         ++ "\n"
         ++ lengthStr
