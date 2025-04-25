@@ -9,6 +9,8 @@
 => Dev
   [ ] torrents
     [ ] discover peers 
+      [ ] proper infohash url encoded for request
+      [ ] parse body response as BEncode encodeBEncode
     [ ] peer handshake
     [ ] download a piece 
     [ ] download a whole file

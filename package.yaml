@@ -6,6 +6,8 @@ dependencies:
   - base >= 4.19 && < 5
   - aeson # for JSON
   - split
+  - utf8-string
+  - http-conduit
   - network-simple # establish a simple TCP network
   - bytestring # useful to send bytes over the network
   - network # required when using bytestring

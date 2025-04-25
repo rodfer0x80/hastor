@@ -3,7 +3,7 @@
 {-# LANGUAGE TypeApplications #-}
 
 import BEncode (BEncode (BDict), decodeBEncode)
-import Meta (parseMeta, getPeers)
+import Meta (parseMeta, getPeers, requestPeers)
 import Control.Monad
 import Data.Aeson
 import qualified Data.ByteString as BS
@@ -36,7 +36,14 @@ main = do
       metaFileContent <- BS.readFile metaFile
       case decodeBEncode metaFileContent of
         decodedData -> putStr $ parseMeta decodedData
-    "peers" -> do
+    "requestPeers" -> do
+      let metaFile = args !! 1
+      metaFileContent <- BS.readFile metaFile
+      case decodeBEncode metaFileContent of
+        decodedData -> do 
+          result <- requestPeers decodedData
+          putStr result
+    "getPeers" -> do
       let metaFile = args !! 1
       metaFileContent <- BS.readFile metaFile
       case decodeBEncode metaFileContent of

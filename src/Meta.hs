@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Meta (parseMeta, getPeers) where
+module Meta (parseMeta, getPeers, requestPeers) where
 
 import BEncode (BEncode (..), encodeBEncode)
 import qualified Crypto.Hash.SHA1 as SHA1
@@ -8,8 +8,10 @@ import Data.Bits (testBit)
 import Data.ByteString (ByteString)
 import qualified Data.ByteString.Base16 as Hex
 import qualified Data.ByteString.Char8 as B
+import qualified Data.ByteString.Lazy.UTF8 as BSL
 import Data.Maybe (fromMaybe)
 import Network.URI.Encode as URL
+import Network.HTTP.Simple
 
 extractInteger :: BEncode -> Maybe Integer
 extractInteger (BInt i) = Just i
@@ -103,8 +105,8 @@ getPeers (BDict metadata) =
         ++ compact
         ++ "\n"
 
-requestPeers :: BEncode -> String
-requestPeers (BDict metadata) =
+requestPeers :: BEncode -> IO String
+requestPeers (BDict metadata) = do
   let trackerUrl = fromMaybe "" (parseTrackerUrl (BDict metadata))
       urlEncodedHash = parseinfoHashUrlEncoded (BDict metadata)
       peerId = "13374204204204201337"
@@ -117,7 +119,19 @@ requestPeers (BDict metadata) =
           Nothing -> "0"
         Nothing -> "0"
       compact = "1"
-   in "requestPeers"
+      queryString = "?info_hash=" ++ urlEncodedHash ++
+                    "&peer_id=" ++ peerId ++
+                    "&port=" ++ port ++
+                    "&uploaded=" ++ uploaded ++
+                    "&downloaded=" ++ downloaded ++
+                    "&left=" ++ left ++
+                    "&compact=" ++ compact
+      fullUrl = trackerUrl ++ queryString
+  let request = parseRequest_ fullUrl
+  response <- httpLBS request
+  let statusCode = getResponseStatusCode response
+      body = BSL.toString (getResponseBody response)
+  return ("Status Code: " ++ show statusCode ++ "\nBody: " ++ body ++ "\n")
 
 parseMeta :: BEncode -> String
 parseMeta (BDict metadata) =

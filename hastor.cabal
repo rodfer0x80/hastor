@@ -32,6 +32,7 @@ library
     , containers
     , cryptohash-sha1
     , cryptonite
+    , http-conduit
     , megaparsec
     , mtl
     , network
@@ -42,6 +43,7 @@ library
     , text
     , time
     , uri-encode
+    , utf8-string
   default-language: Haskell2010
 
 executable hastor-exe
@@ -67,6 +69,7 @@ executable hastor-exe
     , cryptohash-sha1
     , cryptonite
     , hastor
+    , http-conduit
     , megaparsec
     , mtl
     , network
@@ -77,6 +80,7 @@ executable hastor-exe
     , text
     , time
     , uri-encode
+    , utf8-string
   default-language: Haskell2010
 
 test-suite hastor-test
@@ -105,6 +109,7 @@ test-suite hastor-test
     , hastor
     , hspec
     , hspec-expectations
+    , http-conduit
     , megaparsec
     , mtl
     , network
@@ -115,4 +120,5 @@ test-suite hastor-test
     , text
     , time
     , uri-encode
+    , utf8-string
   default-language: Haskell2010
