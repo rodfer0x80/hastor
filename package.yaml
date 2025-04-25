@@ -20,6 +20,7 @@ dependencies:
   - base64
   - cryptohash-sha1 # SHA1
   - base16-bytestring
+  - uri-encode
   # Parsing libs
   - megaparsec
   - parser-combinators
@@ -50,8 +51,8 @@ tests:
     ghc-options:
       - -threaded
       - -rtsopts
-    rts-options:
-      - "-N"
+    #rts-options:
+     # - "-N"
 
 library:
   source-dirs: src

@@ -3,12 +3,12 @@
 {-# LANGUAGE TypeApplications #-}
 
 import BEncode (BEncode (BDict), decodeBEncode)
+import Meta (parseMeta, getPeers)
 import Control.Monad
 import Data.Aeson
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Char8 as B
 import qualified Data.ByteString.Lazy as LB
-import Meta (parseMeta)
 import System.Environment
 import System.Exit
 import System.IO (BufferMode (NoBuffering), hPutStrLn, hSetBuffering, stderr, stdout)
@@ -36,4 +36,9 @@ main = do
       metaFileContent <- BS.readFile metaFile
       case decodeBEncode metaFileContent of
         decodedData -> putStr $ parseMeta decodedData
+    "peers" -> do
+      let metaFile = args !! 1
+      metaFileContent <- BS.readFile metaFile
+      case decodeBEncode metaFileContent of
+        decodedData -> putStr $ getPeers decodedData
     _ -> putStrLn $ "Unknown command: " ++ command

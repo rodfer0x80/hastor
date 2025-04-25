@@ -38,9 +38,10 @@ library
     , network-simple
     , parsec
     , parser-combinators
-    , text
     , split
+    , text
     , time
+    , uri-encode
   default-language: Haskell2010
 
 executable hastor-exe
@@ -72,8 +73,10 @@ executable hastor-exe
     , network-simple
     , parsec
     , parser-combinators
+    , split
     , text
     , time
+    , uri-encode
   default-language: Haskell2010
 
 test-suite hastor-test
@@ -108,6 +111,8 @@ test-suite hastor-test
     , network-simple
     , parsec
     , parser-combinators
+    , split
     , text
     , time
+    , uri-encode
   default-language: Haskell2010
