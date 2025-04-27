@@ -5,6 +5,8 @@
         [ ] decodeBEncode
     [x] fix meta tests with new feature
     [x] add tests for piece hashes
+    [ ] refactor meta tests
+      [ ] test private functions not public ones with side effects
 
 => Dev
   [ ] torrents
