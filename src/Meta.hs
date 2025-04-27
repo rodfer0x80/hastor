@@ -68,13 +68,13 @@ parseInfoHash (BDict metadata) = do
 
 parseinfoHashUrlEncoded :: BEncode -> Maybe String
 parseinfoHashUrlEncoded (BDict metadata) = do
-  infoHash <- parseInfoHash metadata
+  infoHash <- parseInfoHash (BDict metadata)
   return $ B.unpack $ URL.encodeByteString infoHash
 
 getPeers :: BEncode -> String
 getPeers (BDict metadata) =
   let trackerUrl = fromMaybe "" (parseTrackerUrl (BDict metadata))
-      urlEncodedHashMaybe = parseinfoHashUrlEncoded metadata
+      urlEncodedHashMaybe = parseinfoHashUrlEncoded (BDict metadata)
       peerId = "13374204204204201337"
       port = "6881"
       uploaded = "0"
@@ -116,7 +116,7 @@ getPeers (BDict metadata) =
 requestPeers :: BEncode -> IO String
 requestPeers (BDict metadata) = do
   let trackerUrl = fromMaybe "" (parseTrackerUrl (BDict metadata))
-      urlEncodedHashMaybe = parseinfoHashUrlEncoded metadata
+      urlEncodedHashMaybe = parseinfoHashUrlEncoded (BDict metadata)
       peerId = "13374204204204201337"
       port = "6881"
       uploaded = "0"
@@ -148,11 +148,9 @@ requestPeers (BDict metadata) = do
       let request = parseRequest_ fullUrl
       response <- httpLBS request
       let statusCode = getResponseStatusCode response
-        lazyBody = getResponseBody response
-        decodedBody = decodeBEncode $ L.toStrict lazyBody
-      case decodedBodyResult of
-        Just decoded -> return ("Status Code: " ++ show statusCode ++ "\nBody (Decoded):\n" ++ show decoded ++ "\n")
-        Nothing -> return ("Status Code: " ++ show statusCode ++ "\nError decoding body.\n")
+          lazyBody = getResponseBody response
+          decodedBody = decodeBEncode $ L.toStrict lazyBody
+      return ("Status Code: " ++ show statusCode ++ "\nBody (Decoded):\n" ++ show decodedBody ++ "\n")
     Nothing -> return "Error: Could not generate URL for tracker request (invalid info_hash).\n"
 
 parseMeta :: BEncode -> String
@@ -165,8 +163,8 @@ parseMeta (BDict metadata) =
           Nothing -> "Length: N/A"
         Nothing -> "Length: N/A"
 
-      infoHashStr = case parseInfoHash metadata of
-        Just infoDictBEncode -> "Info Hash: " ++ (B.unpack (Hex.encode hashBytes)) 
+      infoHashStr = case parseInfoHash (BDict metadata) of
+        Just hashBytes -> "Info Hash: " ++ (B.unpack (Hex.encode hashBytes)) 
         Nothing -> "Info Hash: N/A"
 
       pieceLengthStr = case parseInfoDict (BDict metadata) of
