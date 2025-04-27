@@ -2,13 +2,14 @@
 
 module Meta (parseMeta, getPeers, requestPeers) where
 
-import BEncode (BEncode (..), encodeBEncode)
+import BEncode (BEncode (..), decodeBEncode, encodeBEncode)
 import qualified Crypto.Hash.SHA1 as SHA1
 import Data.Bits (testBit)
 import Data.ByteString (ByteString)
 import qualified Data.ByteString.Base16 as Hex
 import qualified Data.ByteString.Char8 as B
 import qualified Data.ByteString.Lazy.UTF8 as BSL
+import qualified Data.ByteString.Lazy as L
 import Data.Maybe (fromMaybe)
 import Network.URI.Encode as URL
 import Network.HTTP.Simple
@@ -130,8 +131,9 @@ requestPeers (BDict metadata) = do
   let request = parseRequest_ fullUrl
   response <- httpLBS request
   let statusCode = getResponseStatusCode response
-      body = BSL.toString (getResponseBody response)
-  return ("Status Code: " ++ show statusCode ++ "\nBody: " ++ body ++ "\n")
+      lazyBody = getResponseBody response
+      decodedBody = decodeBEncode $ L.toStrict lazyBody
+  return ("Status Code: " ++ show statusCode ++ "\nBody (Decoded):\n" ++ show decodedBody ++ "\n")
 
 parseMeta :: BEncode -> String
 parseMeta (BDict metadata) =
