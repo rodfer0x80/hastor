@@ -13,6 +13,7 @@ build-type:     Simple
 library
   exposed-modules:
       BEncode
+      Utils
       Meta
   other-modules:
       Main
@@ -51,6 +52,7 @@ executable hastor-exe
   other-modules:
       BEncode
       Meta
+      Utils
       Paths_hastor
   hs-source-dirs:
       src
@@ -88,7 +90,6 @@ test-suite hastor-test
   main-is: Spec.hs
   other-modules:
       BEncodeSpec
-      MetaSpec
       Paths_hastor
   hs-source-dirs:
       test
